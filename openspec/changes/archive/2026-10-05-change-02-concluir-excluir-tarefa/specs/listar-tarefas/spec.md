@@ -1,0 +1,14 @@
+# Spec Delta
+
+## ADDED Requirements
+
+### Requirement: Exibir status e controles em cada tarefa
+Cada tarefa listada SHALL exibir seu texto, seu status ("Pendente" ou "Concluída"), uma caixa de seleção para concluir/reabrir (ver capability `concluir-tarefa`) e um botão de lixeira para excluir (ver capability `excluir-tarefa`).
+
+#### Scenario: Tarefa pendente na lista
+- **WHEN** uma tarefa pendente é exibida na listagem
+- **THEN** o item mostra o texto, o status "Pendente", a caixa de seleção desmarcada e o botão de lixeira
+
+#### Scenario: Tarefa concluída na lista
+- **WHEN** uma tarefa concluída é exibida na listagem (inclusive após recarregar a página)
+- **THEN** o item mostra o texto destacado como concluído, o status "Concluída", a caixa de seleção marcada e o botão de lixeira

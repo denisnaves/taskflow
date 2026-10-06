@@ -48,12 +48,103 @@ function renderTarefas(tarefas) {
   lista.id = "lista-tarefas";
 
   tarefas.forEach((tarefa) => {
-    const item = document.createElement("li");
-    item.textContent = tarefa.texto;
-    lista.appendChild(item);
+    lista.appendChild(criarItemTarefa(tarefa));
   });
 
   areaLista.appendChild(lista);
+}
+
+/**
+ * Cria o item (<li>) de uma tarefa com caixa de seleção (concluir/reabrir),
+ * texto, status ("Pendente"/"Concluída") e botão de lixeira (excluir).
+ * O id da tarefa fica em `data-id` para a delegação de eventos.
+ */
+function criarItemTarefa(tarefa) {
+  const item = document.createElement("li");
+  item.dataset.id = tarefa.id;
+  item.className = "tarefa";
+  if (tarefa.concluida) {
+    item.classList.add("tarefa-concluida");
+  }
+
+  const caixaConclusao = document.createElement("input");
+  caixaConclusao.type = "checkbox";
+  caixaConclusao.className = "tarefa-conclusao";
+  caixaConclusao.checked = tarefa.concluida;
+  caixaConclusao.setAttribute("aria-label", "Concluir tarefa: " + tarefa.texto);
+
+  const texto = document.createElement("span");
+  texto.className = "tarefa-texto";
+  texto.textContent = tarefa.texto;
+
+  const status = document.createElement("span");
+  status.className = "tarefa-status";
+  status.textContent = tarefa.concluida ? "Concluída" : "Pendente";
+
+  const botaoExcluir = document.createElement("button");
+  botaoExcluir.type = "button";
+  botaoExcluir.className = "tarefa-excluir";
+  botaoExcluir.textContent = "🗑️";
+  botaoExcluir.setAttribute("aria-label", "Excluir tarefa: " + tarefa.texto);
+
+  item.append(caixaConclusao, texto, status, botaoExcluir);
+  return item;
+}
+
+/**
+ * Lê o id da tarefa a partir do item (<li>) que contém o elemento informado.
+ */
+function obterIdTarefa(elemento) {
+  return Number(elemento.closest("li").dataset.id);
+}
+
+/**
+ * Devolve o foco do teclado à caixa de seleção da tarefa com o id informado
+ * (a lista é recriada a cada alteração, o que faria o foco ir para o <body>).
+ */
+function focarConclusaoTarefa(id) {
+  const caixa = areaLista.querySelector('li[data-id="' + id + '"] .tarefa-conclusao');
+  if (caixa) {
+    caixa.focus();
+  }
+}
+
+/**
+ * Delegação de eventos (change): marcar/desmarcar a caixa de seleção alterna
+ * o status da tarefa e redesenha a lista.
+ */
+function handleAlternarConclusao(event) {
+  if (!event.target.matches(".tarefa-conclusao")) {
+    return;
+  }
+
+  const id = obterIdTarefa(event.target);
+  alternarConclusaoTarefa(id);
+  atualizarListagem();
+  focarConclusaoTarefa(id);
+}
+
+/**
+ * Delegação de eventos (click): o botão de lixeira exclui a tarefa e redesenha
+ * a lista (exibindo o estado vazio se era a última).
+ */
+function handleExcluir(event) {
+  const botao = event.target.closest(".tarefa-excluir");
+  if (!botao) {
+    return;
+  }
+
+  const item = botao.closest("li");
+  const vizinho = item.nextElementSibling || item.previousElementSibling;
+
+  excluirTarefa(obterIdTarefa(botao));
+  atualizarListagem();
+
+  if (vizinho) {
+    focarConclusaoTarefa(Number(vizinho.dataset.id));
+  } else {
+    campoTarefa.focus();
+  }
 }
 
 /**
@@ -82,5 +173,7 @@ function handleSubmit(event) {
 }
 
 formulario.addEventListener("submit", handleSubmit);
+areaLista.addEventListener("change", handleAlternarConclusao);
+areaLista.addEventListener("click", handleExcluir);
 
 document.addEventListener("DOMContentLoaded", atualizarListagem);

@@ -86,8 +86,37 @@ header h1 {
 }
 
 #lista-tarefas li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 10px 12px;
   border: 1px solid #e4e7eb;
   border-radius: 4px;
   background: #f5f7fa;
+}
+
+.tarefa-texto {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.tarefa-status {
+  font-size: 0.8rem;
+  color: #52606d;
+}
+
+.tarefa-concluida .tarefa-texto {
+  text-decoration: line-through;
+  color: #616e7c;
+}
+
+.tarefa-concluida .tarefa-status {
+  color: #1a7f4b;
+}
+
+.tarefa-excluir {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
 }
