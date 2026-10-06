@@ -1,0 +1,93 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 0 16px;
+  color: #1f2933;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+#botao-configuracao {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+#formulario-tarefa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* O atributo `hidden` por si só não vence a regra acima (mesma especificidade
+   de seletor por ID); esta regra garante que o formulário realmente desapareça
+   enquanto estiver oculto, para nunca coexistir com o botão "+ Nova tarefa". */
+#formulario-tarefa[hidden] {
+  display: none;
+}
+
+#formulario-tarefa label {
+  width: 100%;
+  font-size: 0.85rem;
+  color: #52606d;
+}
+
+#campo-tarefa {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #cbd2d9;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+#formulario-tarefa button[type="submit"] {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+}
+
+#area-lista p {
+  color: #52606d;
+}
+
+#botao-nova-tarefa {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+}
+
+#lista-tarefas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#lista-tarefas li {
+  padding: 10px 12px;
+  border: 1px solid #e4e7eb;
+  border-radius: 4px;
+  background: #f5f7fa;
+}

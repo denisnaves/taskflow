@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>TaskFlow</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>TaskFlow</h1>
+    <button type="button" id="botao-configuracao" aria-label="Configurações">⚙️</button>
+  </header>
+
+  <main>
+    <form id="formulario-tarefa" hidden>
+      <label for="campo-tarefa">Nova tarefa</label>
+      <input type="text" id="campo-tarefa" name="campo-tarefa" placeholder="Digite uma tarefa" />
+      <button type="submit">+ Adicionar</button>
+    </form>
+
+    <div id="area-lista"></div>
+  </main>
+
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
