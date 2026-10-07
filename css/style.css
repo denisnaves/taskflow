@@ -63,6 +63,31 @@ header h1 {
   cursor: pointer;
 }
 
+#filtros {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+#filtros[hidden] {
+  display: none;
+}
+
+.filtro {
+  padding: 6px 12px;
+  border: 1px solid #cbd2d9;
+  border-radius: 4px;
+  background: #fff;
+  color: #1f2933;
+  cursor: pointer;
+}
+
+.filtro-ativo {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
+}
+
 #area-lista p {
   color: #52606d;
 }

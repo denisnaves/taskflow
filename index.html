@@ -18,6 +18,12 @@
       <button type="submit">+ Adicionar</button>
     </form>
 
+    <nav id="filtros" aria-label="Filtrar tarefas" hidden>
+      <button type="button" data-filtro="todas" class="filtro filtro-ativo" aria-pressed="true">Todas</button>
+      <button type="button" data-filtro="pendentes" class="filtro" aria-pressed="false">Pendentes</button>
+      <button type="button" data-filtro="concluidas" class="filtro" aria-pressed="false">Concluídas</button>
+    </nav>
+
     <div id="area-lista"></div>
   </main>
 

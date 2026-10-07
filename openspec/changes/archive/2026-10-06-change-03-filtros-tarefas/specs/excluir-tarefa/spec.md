@@ -1,9 +1,6 @@
-# excluir-tarefa Specification
+# Spec Delta
 
-## Purpose
-Permite que o usuário exclua uma tarefa pela lixeira, removendo-a da tela e do LocalStorage.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Excluir tarefa pela lixeira
 O sistema SHALL exibir um botão de lixeira em cada tarefa listada e, ao ser acionado, SHALL remover imediatamente essa tarefa (pendente ou concluída) da lista exibida e do LocalStorage, sem pedir confirmação. Quando a exclusão deixar a lista sem nenhuma tarefa, o sistema SHALL voltar à tela inicial do estado vazio.

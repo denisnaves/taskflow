@@ -1,6 +1,10 @@
 const formulario = document.querySelector("#formulario-tarefa");
 const campoTarefa = document.querySelector("#campo-tarefa");
 const areaLista = document.querySelector("#area-lista");
+const barraFiltros = document.querySelector("#filtros");
+
+// Filtro ativo ("todas", "pendentes" ou "concluidas"); não é persistido.
+let filtroAtivo = "todas";
 
 /**
  * Revela o formulário de criação de tarefa (campo de texto + botão "+ Adicionar")
@@ -44,14 +48,64 @@ function renderTarefas(tarefas) {
 
   formulario.hidden = false;
 
+  const visiveis = filtrarTarefas(tarefas);
+
+  if (visiveis.length === 0) {
+    const mensagem = document.createElement("p");
+    mensagem.textContent = "Nenhuma tarefa neste filtro.";
+    areaLista.appendChild(mensagem);
+    return;
+  }
+
   const lista = document.createElement("ul");
   lista.id = "lista-tarefas";
 
-  tarefas.forEach((tarefa) => {
+  visiveis.forEach((tarefa) => {
     lista.appendChild(criarItemTarefa(tarefa));
   });
 
   areaLista.appendChild(lista);
+}
+
+/**
+ * Devolve apenas as tarefas correspondentes ao filtro ativo,
+ * mantendo a ordem de criação.
+ */
+function filtrarTarefas(tarefas) {
+  if (filtroAtivo === "pendentes") {
+    return tarefas.filter((tarefa) => !tarefa.concluida);
+  }
+  if (filtroAtivo === "concluidas") {
+    return tarefas.filter((tarefa) => tarefa.concluida);
+  }
+  return tarefas;
+}
+
+/**
+ * Delegação de eventos (click): seleciona o filtro clicado e redesenha a lista.
+ */
+function handleFiltro(event) {
+  const botao = event.target.closest(".filtro");
+  if (!botao) {
+    return;
+  }
+
+  filtroAtivo = botao.dataset.filtro;
+  atualizarListagem();
+}
+
+/**
+ * Exibe a barra de filtros apenas quando há tarefas salvas e marca
+ * como ativo o botão do filtro selecionado.
+ */
+function atualizarFiltros(tarefas) {
+  barraFiltros.hidden = tarefas.length === 0;
+
+  barraFiltros.querySelectorAll(".filtro").forEach((botao) => {
+    const ativo = botao.dataset.filtro === filtroAtivo;
+    botao.classList.toggle("filtro-ativo", ativo);
+    botao.setAttribute("aria-pressed", String(ativo));
+  });
 }
 
 /**
@@ -138,6 +192,15 @@ function handleExcluir(event) {
   const vizinho = item.nextElementSibling || item.previousElementSibling;
 
   excluirTarefa(obterIdTarefa(botao));
+
+  if (carregarTarefas().length === 0) {
+    formulario.hidden = true;
+    filtroAtivo = "todas";
+    atualizarListagem();
+    document.querySelector("#botao-nova-tarefa").focus();
+    return;
+  }
+
   atualizarListagem();
 
   if (vizinho) {
@@ -152,6 +215,7 @@ function handleExcluir(event) {
  */
 function atualizarListagem() {
   const tarefas = carregarTarefas();
+  atualizarFiltros(tarefas);
   renderTarefas(tarefas);
 }
 
@@ -175,5 +239,6 @@ function handleSubmit(event) {
 formulario.addEventListener("submit", handleSubmit);
 areaLista.addEventListener("change", handleAlternarConclusao);
 areaLista.addEventListener("click", handleExcluir);
+barraFiltros.addEventListener("click", handleFiltro);
 
 document.addEventListener("DOMContentLoaded", atualizarListagem);
