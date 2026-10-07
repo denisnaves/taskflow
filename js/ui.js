@@ -155,11 +155,14 @@ function obterIdTarefa(elemento) {
 /**
  * Devolve o foco do teclado à caixa de seleção da tarefa com o id informado
  * (a lista é recriada a cada alteração, o que faria o foco ir para o <body>).
+ * Se a tarefa saiu da lista por causa do filtro ativo, foca o botão desse filtro.
  */
 function focarConclusaoTarefa(id) {
   const caixa = areaLista.querySelector('li[data-id="' + id + '"] .tarefa-conclusao');
   if (caixa) {
     caixa.focus();
+  } else {
+    barraFiltros.querySelector(".filtro-ativo").focus();
   }
 }
 
@@ -241,4 +244,4 @@ areaLista.addEventListener("change", handleAlternarConclusao);
 areaLista.addEventListener("click", handleExcluir);
 barraFiltros.addEventListener("click", handleFiltro);
 
-document.addEventListener("DOMContentLoaded", atualizarListagem);
+atualizarListagem();
