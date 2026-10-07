@@ -20,9 +20,9 @@ function revelarFormulario() {
 
 /**
  * Renderiza a área de listagem a partir de um array de tarefas:
- * exibe o estado vazio (mensagem, com o botão "+ Nova tarefa" apenas enquanto
- * o formulário ainda não foi revelado) quando não há tarefas, ou a lista de
- * tarefas quando há pelo menos uma.
+ * exibe o estado vazio (ilustração, mensagem em duas linhas e, apenas enquanto
+ * o formulário ainda não foi revelado, o botão "+ Nova tarefa" já focado)
+ * quando não há tarefas, ou a lista de tarefas (filtrada) quando há pelo menos uma.
  */
 function renderTarefas(tarefas) {
   while (areaLista.firstChild) {
@@ -30,9 +30,23 @@ function renderTarefas(tarefas) {
   }
 
   if (tarefas.length === 0) {
-    const mensagem = document.createElement("p");
-    mensagem.textContent = "Nenhuma tarefa ainda. Adicione sua primeira tarefa para começar.";
-    areaLista.appendChild(mensagem);
+    const ilustracao = document.createElement("img");
+    ilustracao.src = "img/prancheta.svg";
+    ilustracao.alt = "";
+    ilustracao.className = "ilustracao-vazia";
+    areaLista.appendChild(ilustracao);
+
+    const titulo = document.createElement("p");
+    titulo.className = "mensagem-vazia";
+    const destaque = document.createElement("strong");
+    destaque.textContent = "Nenhuma tarefa ainda.";
+    titulo.appendChild(destaque);
+    areaLista.appendChild(titulo);
+
+    const instrucao = document.createElement("p");
+    instrucao.className = "mensagem-vazia";
+    instrucao.textContent = "Adicione sua primeira tarefa para começar.";
+    areaLista.appendChild(instrucao);
 
     if (formulario.hidden) {
       const botaoNovaTarefa = document.createElement("button");
@@ -41,6 +55,7 @@ function renderTarefas(tarefas) {
       botaoNovaTarefa.textContent = "+ Nova tarefa";
       botaoNovaTarefa.addEventListener("click", revelarFormulario);
       areaLista.appendChild(botaoNovaTarefa);
+      botaoNovaTarefa.focus();
     }
 
     return;
@@ -101,7 +116,14 @@ function handleFiltro(event) {
 function atualizarFiltros(tarefas) {
   barraFiltros.hidden = tarefas.length === 0;
 
+  const totais = {
+    todas: tarefas.length,
+    pendentes: tarefas.filter((tarefa) => !tarefa.concluida).length,
+    concluidas: tarefas.filter((tarefa) => tarefa.concluida).length,
+  };
+
   barraFiltros.querySelectorAll(".filtro").forEach((botao) => {
+    botao.querySelector(".filtro-total").textContent = "(" + totais[botao.dataset.filtro] + ")";
     const ativo = botao.dataset.filtro === filtroAtivo;
     botao.classList.toggle("filtro-ativo", ativo);
     botao.setAttribute("aria-pressed", String(ativo));
@@ -138,7 +160,6 @@ function criarItemTarefa(tarefa) {
   const botaoExcluir = document.createElement("button");
   botaoExcluir.type = "button";
   botaoExcluir.className = "tarefa-excluir";
-  botaoExcluir.textContent = "🗑️";
   botaoExcluir.setAttribute("aria-label", "Excluir tarefa: " + tarefa.texto);
 
   item.append(caixaConclusao, texto, status, botaoExcluir);
@@ -200,7 +221,6 @@ function handleExcluir(event) {
     formulario.hidden = true;
     filtroAtivo = "todas";
     atualizarListagem();
-    document.querySelector("#botao-nova-tarefa").focus();
     return;
   }
 

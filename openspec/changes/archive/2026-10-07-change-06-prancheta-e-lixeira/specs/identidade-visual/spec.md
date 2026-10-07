@@ -1,42 +1,6 @@
-# identidade-visual Specification
+# Spec Delta
 
-## Purpose
-Define a identidade visual do TaskFlow: marca bicolor, fundo claro, itens em cartões arredondados e cores amigáveis para filtros e status, sem alterar o comportamento da aplicação.
-
-## Requirements
-
-### Requirement: Marca TaskFlow bicolor
-O título da aplicação SHALL exibir "Task" em azul e "Flow" em preto, formando o texto "TaskFlow".
-
-#### Scenario: Título exibido
-- **WHEN** a página é carregada
-- **THEN** o título mostra "Task" em azul seguido de "Flow" em preto
-
-### Requirement: Fundo claro e itens em cartões brancos
-A página SHALL ter fundo cinza claro, e cada tarefa SHALL ser exibida dentro de um componente arredondado de fundo branco com sombra suave, e o campo de texto do formulário SHALL ter fundo branco e cantos arredondados.
-
-#### Scenario: Lista com tarefas
-- **WHEN** existem tarefas na lista
-- **THEN** o fundo da página é cinza claro e cada tarefa aparece em um cartão branco de cantos arredondados
-
-### Requirement: Botões de ação azuis
-Os botões "+ Adicionar" e "+ Nova tarefa" SHALL ter fundo azul e texto branco.
-
-#### Scenario: Botões visíveis
-- **WHEN** o botão "+ Nova tarefa" (estado vazio) ou "+ Adicionar" (formulário) é exibido
-- **THEN** ele aparece com fundo azul e texto branco
-
-### Requirement: Filtros e status coloridos
-Os filtros e os status das tarefas SHALL usar cores com fundo claro e texto em negrito: Pendentes (e status "Pendente") em laranja, Concluídas (e status "Concluída") em verde e Todas em azul. O filtro ativo SHALL ser destacado por uma borda na cor do filtro.
-
-#### Scenario: Filtros exibidos
-- **WHEN** a barra de filtros é exibida
-- **THEN** "Pendentes" tem fundo laranja claro e texto laranja em negrito, "Concluídas" tem fundo verde claro e texto verde em negrito, e "Todas" tem fundo azul claro e texto azul em negrito
-- **AND** o filtro ativo tem uma borda na sua cor
-
-#### Scenario: Status de uma tarefa
-- **WHEN** uma tarefa pendente e uma concluída são exibidas
-- **THEN** o status "Pendente" aparece em laranja em negrito e o status "Concluída" em verde em negrito
+## ADDED Requirements
 
 ### Requirement: Ilustração de prancheta no estado vazio
 Sempre que não houver nenhuma tarefa (tela inicial e tela com o formulário revelado), a aplicação SHALL exibir uma ilustração de prancheta acima da mensagem "Nenhuma tarefa ainda. Adicione sua primeira tarefa para começar.". Com pelo menos uma tarefa, a ilustração SHALL NOT ser exibida.
@@ -73,3 +37,9 @@ O botão de excluir de cada tarefa SHALL exibir um ícone de lixeira (imagem, n�
 #### Scenario: Lixeira na tarefa
 - **WHEN** uma tarefa é exibida
 - **THEN** o botão de excluir mostra o ícone de lixeira em cinza e, ao passar o mouse ou receber o foco do teclado, em vermelho
+
+## REMOVED Requirements
+
+### Requirement: Sem imagem de prancheta
+**Reason**: Substituído pelo pedido de exibir uma ilustração de prancheta quando não há tarefas.
+**Migration**: Ver o requisito "Ilustração de prancheta no estado vazio".

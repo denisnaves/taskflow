@@ -175,8 +175,36 @@ header h1 {
 }
 
 .tarefa-excluir {
-  background: none;
+  width: 32px;
+  height: 32px;
   border: none;
-  font-size: 1.1rem;
+  background: url("../img/lixeira.svg") center / 20px 20px no-repeat;
   cursor: pointer;
+}
+
+.tarefa-excluir:hover,
+.tarefa-excluir:focus-visible {
+  background-image: url("../img/lixeira-vermelha.svg");
+}
+
+.mensagem-vazia {
+  margin: 0 0 4px;
+  text-align: center;
+}
+
+#botao-nova-tarefa {
+  display: block;
+  margin: 16px auto 0;
+  padding: 11px 18px;
+  font-size: 0.917rem;
+}
+
+#botao-nova-tarefa:focus {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+.ilustracao-vazia {
+  display: block;
+  margin: 0 auto 16px;
 }
