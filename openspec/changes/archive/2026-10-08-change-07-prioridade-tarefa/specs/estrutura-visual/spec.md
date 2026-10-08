@@ -1,21 +1,6 @@
-# estrutura-visual Specification
+# Spec Delta
 
-## Purpose
-
-Define o layout inicial da página do TaskFlow, fornecendo os elementos visuais necessários para o usuário criar e visualizar tarefas.
-
-## Requirements
-
-### Requirement: Layout inicial da página
-A aplicação SHALL exibir, ao ser aberta, um título "TaskFlow", um botão de configuração e uma área onde a lista de tarefas (ou o estado vazio) é exibida.
-
-#### Scenario: Página carregada
-- **WHEN** o usuário abre a aplicação
-- **THEN** a página exibe o título "TaskFlow", o botão de configuração e a área de listagem (vazia ou com tarefas), sem erros no console
-
-#### Scenario: Elementos acessíveis via teclado e leitura
-- **WHEN** a página é carregada e o formulário de criação está visível
-- **THEN** o campo de texto do formulário possui um `label` ou atributo associado que identifica sua finalidade (ex.: "Nova tarefa")
+## MODIFIED Requirements
 
 ### Requirement: Estado vazio da listagem
 Quando não há nenhuma tarefa salva **e** o formulário de criação ainda não foi revelado, a área de listagem SHALL exibir a mensagem "Nenhuma tarefa criada ainda. Adicione sua primeira tarefa para começar." e um botão "+ Nova tarefa". A mensagem continua sendo exibida mesmo depois de o formulário ser revelado (enquanto não houver tarefas), mas o botão "+ Nova tarefa" SHALL NOT ser exibido junto com o formulário de criação — a tela nunca exibe, ao mesmo tempo, dois controles com a finalidade de criar uma tarefa.
@@ -35,10 +20,3 @@ Ao clicar no botão "+ Nova tarefa", o sistema SHALL exibir o formulário de cri
 #### Scenario: Página recarregada com tarefas existentes
 - **WHEN** o usuário recarrega a página e já existe ao menos uma tarefa salva no LocalStorage
 - **THEN** o formulário (campo de texto + botão "Incluir") já é exibido, sem necessidade de clicar em "+ Nova tarefa", e o botão "+ Nova tarefa" não aparece
-
-### Requirement: Botão de configuração sem ação
-O botão de configuração SHALL ser exibido na tela, mas SHALL NOT produzir nenhum efeito observável ao ser clicado nesta Change (sem modal, navegação ou alteração de dados).
-
-#### Scenario: Usuário clica no botão de configuração
-- **WHEN** o usuário clica no botão de configuração
-- **THEN** nenhuma mudança visível ocorre na tela e nenhum erro aparece no console

@@ -12,17 +12,31 @@
   </header>
 
   <main>
-    <form id="formulario-tarefa" hidden>
-      <label for="campo-tarefa">Nova tarefa</label>
-      <input type="text" id="campo-tarefa" name="campo-tarefa" placeholder="Digite uma tarefa" />
-      <button type="submit">+ Adicionar</button>
+    <form id="formulario-tarefa" class="painel" hidden>
+      <h2 class="titulo-painel">Incluir</h2>
+      <input type="text" id="campo-tarefa" name="campo-tarefa" placeholder="Digite uma nova tarefa" aria-label="Nova tarefa" />
+      <button type="submit" class="botao-incluir" aria-label="Incluir">+</button>
+      <fieldset id="campo-prioridade">
+        <legend>Selecione a Prioridade</legend>
+        <label class="opcao-prioridade opcao-prioridade-baixa"><input type="radio" name="prioridade" value="baixa" /><span>Baixa</span></label>
+        <label class="opcao-prioridade opcao-prioridade-media"><input type="radio" name="prioridade" value="media" checked /><span>Média</span></label>
+        <label class="opcao-prioridade opcao-prioridade-alta"><input type="radio" name="prioridade" value="alta" /><span>Alta</span></label>
+      </fieldset>
     </form>
 
-    <nav id="filtros" aria-label="Filtrar tarefas" hidden>
-      <button type="button" data-filtro="todas" class="filtro filtro-ativo" aria-pressed="true">Todas <span class="filtro-total">(0)</span></button>
-      <button type="button" data-filtro="pendentes" class="filtro" aria-pressed="false">Pendentes <span class="filtro-total">(0)</span></button>
-      <button type="button" data-filtro="concluidas" class="filtro" aria-pressed="false">Concluídas <span class="filtro-total">(0)</span></button>
-    </nav>
+    <div id="painel-filtros" class="painel" hidden>
+      <h2 class="titulo-painel">Filtro</h2>
+      <nav id="filtros" aria-label="Filtrar tarefas">
+        <button type="button" data-filtro="todas" class="filtro filtro-ativo" aria-pressed="true">Todas <span class="filtro-total">(0)</span></button>
+        <button type="button" data-filtro="pendentes" class="filtro" aria-pressed="false">Pendentes <span class="filtro-total">(0)</span></button>
+        <button type="button" data-filtro="concluidas" class="filtro" aria-pressed="false">Concluídas <span class="filtro-total">(0)</span></button>
+      </nav>
+      <nav id="filtros-prioridade" aria-label="Filtrar por prioridade">
+        <button type="button" data-prioridade="baixa" class="filtro-prioridade filtro-ativo" aria-pressed="true">Baixa</button>
+        <button type="button" data-prioridade="media" class="filtro-prioridade filtro-ativo" aria-pressed="true">Média</button>
+        <button type="button" data-prioridade="alta" class="filtro-prioridade filtro-ativo" aria-pressed="true">Alta</button>
+      </nav>
+    </div>
 
     <div id="area-lista"></div>
   </main>

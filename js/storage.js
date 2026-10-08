@@ -1,9 +1,12 @@
 const STORAGE_KEY = "taskflow.tasks";
+const PRIORIDADES = ["alta", "media", "baixa"];
+const PRIORIDADE_PADRAO = "media";
 
 /**
  * Carrega a lista de tarefas salva no LocalStorage.
  * Retorna um array vazio se não houver dados ou se os dados estiverem corrompidos.
- * Tarefas salvas sem o campo `concluida` são tratadas como pendentes.
+ * Tarefas salvas sem o campo `concluida` são tratadas como pendentes e, sem
+ * prioridade válida, como de prioridade "media".
  */
 function carregarTarefas() {
   const dados = localStorage.getItem(STORAGE_KEY);
@@ -16,6 +19,7 @@ function carregarTarefas() {
     return JSON.parse(dados).map((tarefa) => ({
       ...tarefa,
       concluida: Boolean(tarefa.concluida),
+      prioridade: PRIORIDADES.includes(tarefa.prioridade) ? tarefa.prioridade : PRIORIDADE_PADRAO,
     }));
   } catch (erro) {
     return [];
@@ -30,14 +34,14 @@ function salvarTarefas(tarefas) {
 }
 
 /**
- * Salva uma nova tarefa (pendente) no LocalStorage a partir do texto informado,
+ * Salva uma nova tarefa (pendente) no LocalStorage a partir do texto e da prioridade informados,
  * adicionando-a à lista existente. O id é sempre maior que os já existentes,
  * pois concluir/excluir operam por id. Retorna o item salvo.
  */
-function salvarTarefa(texto) {
+function salvarTarefa(texto, prioridade) {
   const tarefas = carregarTarefas();
   const maiorId = tarefas.reduce((maior, tarefa) => Math.max(maior, tarefa.id), 0);
-  const novaTarefa = { id: Math.max(Date.now(), maiorId + 1), texto: texto, concluida: false };
+  const novaTarefa = { id: Math.max(Date.now(), maiorId + 1), texto: texto, concluida: false, prioridade: prioridade };
   tarefas.push(novaTarefa);
   salvarTarefas(tarefas);
   return novaTarefa;

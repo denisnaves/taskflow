@@ -1,13 +1,21 @@
 const formulario = document.querySelector("#formulario-tarefa");
 const campoTarefa = document.querySelector("#campo-tarefa");
+const botaoIncluir = document.querySelector(".botao-incluir");
+const grupoPrioridade = document.querySelector("#campo-prioridade");
 const areaLista = document.querySelector("#area-lista");
+const painelFiltros = document.querySelector("#painel-filtros");
 const barraFiltros = document.querySelector("#filtros");
+const barraFiltrosPrioridade = document.querySelector("#filtros-prioridade");
 
-// Filtro ativo ("todas", "pendentes" ou "concluidas"); não é persistido.
+const ROTULOS_PRIORIDADE = { alta: "Alta", media: "Média", baixa: "Baixa" };
+
+// Filtros ativos: status ("todas", "pendentes" ou "concluidas") e prioridades
+// marcadas (podem ser nenhuma); não são persistidos.
 let filtroAtivo = "todas";
+let prioridadesAtivas = ["baixa", "media", "alta"];
 
 /**
- * Revela o formulário de criação de tarefa (campo de texto + botão "+ Adicionar")
+ * Revela o formulário de criação de tarefa (campo de texto, botão "+" de inclusão e prioridade)
  * e atualiza a listagem para que o botão "+ Nova tarefa" deixe de ser exibido
  * (as duas telas nunca mostram, ao mesmo tempo, dois botões com a mesma
  * finalidade de criar tarefa).
@@ -22,7 +30,8 @@ function revelarFormulario() {
  * Renderiza a área de listagem a partir de um array de tarefas:
  * exibe o estado vazio (ilustração, mensagem em duas linhas e, apenas enquanto
  * o formulário ainda não foi revelado, o botão "+ Nova tarefa" já focado)
- * quando não há tarefas, ou a lista de tarefas (filtrada) quando há pelo menos uma.
+ * quando não há tarefas, ou a lista de tarefas (filtrada), dentro de um painel
+ * junto com o cabeçalho das colunas, quando há pelo menos uma.
  */
 function renderTarefas(tarefas) {
   while (areaLista.firstChild) {
@@ -39,7 +48,7 @@ function renderTarefas(tarefas) {
     const titulo = document.createElement("p");
     titulo.className = "mensagem-vazia";
     const destaque = document.createElement("strong");
-    destaque.textContent = "Nenhuma tarefa ainda.";
+    destaque.textContent = "Nenhuma tarefa criada ainda.";
     titulo.appendChild(destaque);
     areaLista.appendChild(titulo);
 
@@ -72,6 +81,25 @@ function renderTarefas(tarefas) {
     return;
   }
 
+  const painelLista = document.createElement("div");
+  painelLista.className = "painel painel-lista";
+
+  const tituloLista = document.createElement("h2");
+  tituloLista.className = "titulo-painel";
+  tituloLista.textContent = "Listagem";
+  painelLista.appendChild(tituloLista);
+
+  const cabecalho = document.createElement("div");
+  cabecalho.className = "cabecalho-lista";
+  const tituloPrioridade = document.createElement("span");
+  tituloPrioridade.className = "cabecalho-prioridade";
+  tituloPrioridade.textContent = "Prioridade";
+  const tituloStatus = document.createElement("span");
+  tituloStatus.className = "cabecalho-status";
+  tituloStatus.textContent = "Status";
+  cabecalho.append(tituloPrioridade, tituloStatus);
+  painelLista.appendChild(cabecalho);
+
   const lista = document.createElement("ul");
   lista.id = "lista-tarefas";
 
@@ -79,21 +107,23 @@ function renderTarefas(tarefas) {
     lista.appendChild(criarItemTarefa(tarefa));
   });
 
-  areaLista.appendChild(lista);
+  painelLista.appendChild(lista);
+  areaLista.appendChild(painelLista);
 }
 
 /**
- * Devolve apenas as tarefas correspondentes ao filtro ativo,
+ * Devolve apenas as tarefas correspondentes aos filtros ativos (status e prioridade),
  * mantendo a ordem de criação.
  */
 function filtrarTarefas(tarefas) {
-  if (filtroAtivo === "pendentes") {
-    return tarefas.filter((tarefa) => !tarefa.concluida);
-  }
-  if (filtroAtivo === "concluidas") {
-    return tarefas.filter((tarefa) => tarefa.concluida);
-  }
-  return tarefas;
+  return tarefas.filter((tarefa) => {
+    const statusOk =
+      filtroAtivo === "todas" ||
+      (filtroAtivo === "pendentes" && !tarefa.concluida) ||
+      (filtroAtivo === "concluidas" && tarefa.concluida);
+    const prioridadeOk = prioridadesAtivas.includes(tarefa.prioridade);
+    return statusOk && prioridadeOk;
+  });
 }
 
 /**
@@ -110,11 +140,30 @@ function handleFiltro(event) {
 }
 
 /**
+ * Delegação de eventos (click): marca ou desmarca a prioridade clicada e
+ * redesenha a lista. Todas as prioridades podem ficar desmarcadas.
+ */
+function handleFiltroPrioridade(event) {
+  const botao = event.target.closest(".filtro-prioridade");
+  if (!botao) {
+    return;
+  }
+
+  const prioridade = botao.dataset.prioridade;
+  if (prioridadesAtivas.includes(prioridade)) {
+    prioridadesAtivas = prioridadesAtivas.filter((item) => item !== prioridade);
+  } else {
+    prioridadesAtivas.push(prioridade);
+  }
+  atualizarListagem();
+}
+
+/**
  * Exibe a barra de filtros apenas quando há tarefas salvas e marca
  * como ativo o botão do filtro selecionado.
  */
 function atualizarFiltros(tarefas) {
-  barraFiltros.hidden = tarefas.length === 0;
+  painelFiltros.hidden = tarefas.length === 0;
 
   const totais = {
     todas: tarefas.length,
@@ -128,11 +177,17 @@ function atualizarFiltros(tarefas) {
     botao.classList.toggle("filtro-ativo", ativo);
     botao.setAttribute("aria-pressed", String(ativo));
   });
+
+  barraFiltrosPrioridade.querySelectorAll(".filtro-prioridade").forEach((botao) => {
+    const ativo = prioridadesAtivas.includes(botao.dataset.prioridade);
+    botao.classList.toggle("filtro-ativo", ativo);
+    botao.setAttribute("aria-pressed", String(ativo));
+  });
 }
 
 /**
  * Cria o item (<li>) de uma tarefa com caixa de seleção (concluir/reabrir),
- * texto, status ("Pendente"/"Concluída") e botão de lixeira (excluir).
+ * texto, prioridade, status ("Pendente"/"Concluída") e botão de lixeira (excluir).
  * O id da tarefa fica em `data-id` para a delegação de eventos.
  */
 function criarItemTarefa(tarefa) {
@@ -153,6 +208,10 @@ function criarItemTarefa(tarefa) {
   texto.className = "tarefa-texto";
   texto.textContent = tarefa.texto;
 
+  const prioridade = document.createElement("span");
+  prioridade.className = "tarefa-prioridade tarefa-prioridade-" + tarefa.prioridade;
+  prioridade.textContent = ROTULOS_PRIORIDADE[tarefa.prioridade];
+
   const status = document.createElement("span");
   status.className = "tarefa-status";
   status.textContent = tarefa.concluida ? "Concluída" : "Pendente";
@@ -162,7 +221,7 @@ function criarItemTarefa(tarefa) {
   botaoExcluir.className = "tarefa-excluir";
   botaoExcluir.setAttribute("aria-label", "Excluir tarefa: " + tarefa.texto);
 
-  item.append(caixaConclusao, texto, status, botaoExcluir);
+  item.append(caixaConclusao, texto, prioridade, status, botaoExcluir);
   return item;
 }
 
@@ -220,6 +279,7 @@ function handleExcluir(event) {
   if (carregarTarefas().length === 0) {
     formulario.hidden = true;
     filtroAtivo = "todas";
+    prioridadesAtivas = ["baixa", "media", "alta"];
     atualizarListagem();
     return;
   }
@@ -251,17 +311,38 @@ function handleSubmit(event) {
 
   const texto = campoTarefa.value.trim();
   if (!texto) {
+    campoTarefa.focus();
     return;
   }
 
-  salvarTarefa(texto);
+  const prioridade = formulario.querySelector('input[name="prioridade"]:checked').value;
+  salvarTarefa(texto, prioridade);
   campoTarefa.value = "";
   atualizarListagem();
+  campoTarefa.focus();
+}
+
+/**
+ * Delegação de eventos (click): ao clicar em uma opção de prioridade com o mouse
+ * ou toque (e não na legenda ou no espaço entre as opções), se já há texto
+ * digitado, leva o foco ao botão de inclusão. Cliques gerados pelo teclado
+ * (setas entre as opções) têm `detail` 0 e são ignorados. O foco é movido em
+ * seguida (setTimeout) porque, ao clicar no rótulo da opção, o navegador ainda
+ * foca o rádio depois deste evento.
+ */
+function handleSelecionarPrioridade(event) {
+  if (event.detail === 0 || !event.target.closest(".opcao-prioridade") || !campoTarefa.value.trim()) {
+    return;
+  }
+
+  setTimeout(() => botaoIncluir.focus(), 0);
 }
 
 formulario.addEventListener("submit", handleSubmit);
+grupoPrioridade.addEventListener("click", handleSelecionarPrioridade);
 areaLista.addEventListener("change", handleAlternarConclusao);
 areaLista.addEventListener("click", handleExcluir);
 barraFiltros.addEventListener("click", handleFiltro);
+barraFiltrosPrioridade.addEventListener("click", handleFiltroPrioridade);
 
 atualizarListagem();

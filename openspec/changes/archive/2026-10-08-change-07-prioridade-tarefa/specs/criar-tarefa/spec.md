@@ -1,26 +1,6 @@
-# criar-tarefa Specification
+# Spec Delta
 
-## Purpose
-
-Permite que o usuário crie uma nova tarefa pelo formulário revelado na página, adicionando-a à lista em tela e persistindo-a no LocalStorage.
-
-## Requirements
-
-### Requirement: Criar tarefa a partir do formulário
-Ao confirmar o formulário (botão "Incluir" ou Enter) com um texto não vazio, o sistema SHALL criar uma nova tarefa com a prioridade selecionada, adicioná-la à lista exibida em tela e salvá-la no LocalStorage.
-
-#### Scenario: Criação com texto válido
-- **WHEN** o usuário digita um texto no campo de nova tarefa e confirma (botão "Incluir" ou Enter)
-- **THEN** a tarefa aparece na lista exibida em tela e é salva no LocalStorage
-- **AND** o campo de texto é limpo para permitir a criação da próxima tarefa
-
-#### Scenario: Tentativa de criação com texto vazio
-- **WHEN** o usuário confirma o formulário sem digitar nenhum texto (ou apenas espaços)
-- **THEN** nenhuma tarefa é criada, nenhuma tarefa é salva no LocalStorage e a lista em tela permanece inalterada
-
-#### Scenario: Formulário permanece visível após criar uma tarefa
-- **WHEN** o usuário cria uma tarefa com sucesso
-- **THEN** o campo de texto, as opções de prioridade e o botão "Incluir" continuam visíveis, permitindo criar outra tarefa sem clicar novamente em "+ Nova tarefa"
+## ADDED Requirements
 
 ### Requirement: Selecionar a prioridade ao criar a tarefa
 O formulário de nova tarefa SHALL oferecer a escolha da prioridade por um grupo horizontal de opções em forma de pílula (uma única selecionável), exibidas nesta ordem, da esquerda para a direita: "Baixa", "Média" e "Alta", cada uma com fundo redondo colorido sólido (Baixa azul, Média amarela, Alta vermelha) e o nome em negrito, em branco (na Média, em um tom bem escuro para manter a leitura sobre o amarelo), sem botão de rádio visível. A opção selecionada SHALL ser destacada por um anel ao redor da pílula. A opção "Média" SHALL vir selecionada por padrão e o usuário SHALL poder clicar em outra opção para trocar a prioridade. A tarefa criada SHALL ser salva no LocalStorage com a prioridade selecionada. Após criar a tarefa, a seleção SHALL permanecer na última opção escolhida (a opção "Média" é só o valor inicial ao abrir a página).
@@ -95,3 +75,21 @@ Quando o campo de texto já contiver um texto digitado e o usuário clicar em um
 #### Scenario: Navegar pelas opções com o teclado
 - **WHEN** o usuário usa as setas do teclado para trocar a opção de prioridade
 - **THEN** o foco permanece no grupo de prioridades
+
+## MODIFIED Requirements
+
+### Requirement: Criar tarefa a partir do formulário
+Ao confirmar o formulário (botão "Incluir" ou Enter) com um texto não vazio, o sistema SHALL criar uma nova tarefa com a prioridade selecionada, adicioná-la à lista exibida em tela e salvá-la no LocalStorage.
+
+#### Scenario: Criação com texto válido
+- **WHEN** o usuário digita um texto no campo de nova tarefa e confirma (botão "Incluir" ou Enter)
+- **THEN** a tarefa aparece na lista exibida em tela e é salva no LocalStorage
+- **AND** o campo de texto é limpo para permitir a criação da próxima tarefa
+
+#### Scenario: Tentativa de criação com texto vazio
+- **WHEN** o usuário confirma o formulário sem digitar nenhum texto (ou apenas espaços)
+- **THEN** nenhuma tarefa é criada, nenhuma tarefa é salva no LocalStorage e a lista em tela permanece inalterada
+
+#### Scenario: Formulário permanece visível após criar uma tarefa
+- **WHEN** o usuário cria uma tarefa com sucesso
+- **THEN** o campo de texto, as opções de prioridade e o botão "Incluir" continuam visíveis, permitindo criar outra tarefa sem clicar novamente em "+ Nova tarefa"
